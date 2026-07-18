@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kocsis Ágnes — Teremgarázsok</title>
+  <link rel="icon" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <noscript><meta http-equiv="refresh" content="0;url=nojs.html"></noscript>
+</head>
+<body>
+
+  <header id="header"></header>
+
+  <main class="page-wrap">
+    <h2 class="listings-header">Teremgarázsok</h2>
+    <section class="listings" id="listings"></section>
+  </main>
+
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <header><button class="close" id="modal-close">✕</button></header>
+      <div class="modal-scroll">
+        <div class="gallery-wrap">
+          <div class="gallery" id="gallery"></div>
+          <div class="gallery-controls">
+            <button id="prev"><i class="fas fa-chevron-left"></i></button>
+            <button id="next"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="modal-content" id="modal-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer></footer>
+
+  <script src="../data/properties.js"></script>
+  <script src="../shared.js"></script>
+  <script>initListingsPage('garage');</script>
+</body>
+</html>

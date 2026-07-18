@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kocsis Ágnes — Ingatlan</title>
+  <link rel="icon" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <noscript><meta http-equiv="refresh" content="0;url=nojs.html"></noscript>
+</head>
+<body>
+
+  <header id="header"></header>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <h1>Kocsis Ágnes</h1>
+    <p class="hero-sub">Ingatlanközvetítés · Budapest</p>
+    <p class="hero-tagline">Eladó és kiadó ingatlanok — személyes figyelemmel.</p>
+    <div class="hero-ctas">
+      <a href="for-rent.html" class="btn-primary">
+        <i class="fas fa-key" style="margin-right:6px"></i>Kiadó ingatlanok
+      </a>
+      <a href="for-sale.html" class="btn-primary" style="background:var(--badge-gradient)">
+        <i class="fas fa-home" style="margin-right:6px"></i>Eladó ingatlanok
+      </a>
+      <a href="spain.html" class="btn-primary" style="background:linear-gradient(135deg,#c8102e,#f1bf00)">
+        <i class="fas fa-umbrella-beach" style="margin-right:6px"></i>Spanyolország
+      </a>
+    </div>
+  </section>
+
+  <!-- Kategóriák élő darabszámmal (adatvezérelt) -->
+  <section class="home-cats">
+    <div class="cat-grid" id="cat-grid"></div>
+  </section>
+
+  <!-- Kiemelt ingatlanok (adatvezérelt) -->
+  <section class="featured-section">
+    <h2 class="reveal">Kiemelt ingatlanok</h2>
+    <div class="featured-grid" id="featured-grid"></div>
+  </section>
+
+  <!-- Kapcsolat sáv -->
+  <section class="home-cta" id="home-cta"></section>
+
+  <footer></footer>
+
+  <script src="../data/properties.js"></script>
+  <script src="../shared.js"></script>
+  <script>
+    initPage('home');
+    buildCategoryTiles('cat-grid');
+    buildFeatured('featured-grid');
+    buildContactCta('home-cta');
+  </script>
+</body>
+</html>

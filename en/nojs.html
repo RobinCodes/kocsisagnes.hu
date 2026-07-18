@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agnes Kocsis — JavaScript Required</title>
+  <link rel="icon" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .nojs-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 50vh;
+      text-align: center; padding: 3rem 2rem; gap: 1rem;
+    }
+    .nojs-icon { font-size: 3.5rem; color: var(--accent); opacity: 0.6; }
+    .nojs-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 4rem);
+      color: var(--accent-bright); font-weight: 700;
+    }
+    .nojs-msg { color: var(--text-muted); max-width: 480px; font-size: 1.05rem; }
+  </style>
+</head>
+<body>
+
+  <header id="header">
+    <a class="logo-area" href="index.html">
+      <img src="../assets/favicon.png" alt="Logo">
+      <h1>Agnes Kocsis</h1>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="nojs-wrap">
+    <i class="fas fa-exclamation-circle nojs-icon"></i>
+    <h1 class="nojs-title">JavaScript Required</h1>
+    <p class="nojs-msg">
+      This website requires JavaScript to function correctly. Please enable JavaScript in your browser settings and reload the page.
+    </p>
+    <a href="https://support.google.com/adsense/answer/12654" style="color:var(--accent-bright);text-decoration:underline">How to enable Javascript</a>
+    <a href="index.html" style="color:var(--accent-bright);text-decoration:underline">← Return to Home</a>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <p>© 2026 <span>Agnes Kocsis</span>. All rights reserved.</p>
+      <p>Real Estate · Budapest</p>
+    </div>
+    <div class="footer-right footer-contact">
+      <a href="mailto:agneskocsis@gmail.com"><i class="fas fa-envelope"></i> agneskocsis@gmail.com</a>
+      <a href="tel:+36209117442"><i class="fas fa-phone-alt"></i> +36 20 911 7442</a>
+    </div>
+  </footer>
+</body>
+</html>

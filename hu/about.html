@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kocsis Ágnes — Rólam</title>
+  <link rel="icon" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <noscript><meta http-equiv="refresh" content="0;url=nojs.html"></noscript>
+</head>
+<body class="hero-page">
+
+  <header id="header"></header>
+
+  <!-- Full-width hero: about.png bleeds under transparent header -->
+  <div class="about-hero">
+    <img src="../assets/about.png" onerror="window._extFallback(this)" alt="Kocsis Ágnes">
+    <h2 class="about-hero-title">Rólam</h2>
+
+     <!-- Scroll hint: translucent circle with bouncing chevron -->
+    <button class="scroll-hint" id="scrollHint" aria-label="Scroll to content">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+  </div>
+
+  <!-- Side-by-side: text left, portrait right (portrait moves above text on mobile) -->
+  <div class="about-layout" id="aboutContent">
+    <div class="about-text">
+      <p>
+        Üdvözlöm!<br><br>
+        Kocsis Ágnes vagyok. Közgazdászként végeztem a Corvinus Egyetemen, és közel 17 évet dolgoztam
+        pénzügyi területen egy multinacionális vállalatnál. A számok, a rendszerek és a precizitás
+        mindig is közel álltak hozzám – de egy idő után rájöttem, hogy az emberekkel való személyes
+        kapcsolat és az otthonteremtés öröme sokkal inkább az én világom. 2024 őszén elkezdtem
+        ingatlanközvetítő pályafutásom.
+      </p>
+      <p>
+        Ma már önállóan dolgozom, független ingatlanközvetítőként. Más, hasonlóan önálló
+        szakemberekkel együttműködve biztosítom, hogy ügyfeleim a lehető legnagyobb figyelmet és
+        támogatást kapják – hiszen egyszerre mindig csak néhány megbízást vállalok, így valóban
+        mindenre jut idő és energia.
+      </p>
+      <p>
+        Számomra alapérték a pontosság, a tiszta kommunikáció és a hatékonyság. Hiszek abban, hogy
+        a korrekt, átlátható együttműködés a legjobb alapja egy sikeres ingatlanügyletnek.
+      </p>
+      <p>
+        Ha eladó ingatlana van, vagy valamelyik ingatlanunk felkeltette az érdeklődését,
+        <strong>keressen bizalommal</strong> – örömmel segítek a céljai megvalósításában.
+      </p>
+    </div>
+
+    <div class="about-photo-col">
+      <img src="../assets/about.png" onerror="window._extFallback(this)" alt="Kocsis Ágnes portré">
+    </div>
+  </div>
+
+  <footer></footer>
+
+  <script src="../shared.js"></script>
+  <script>initPage('about');</script>
+
+  <script>
+    // ── Scroll hint ──────────────────────────────────────────────
+    document.getElementById('scrollHint').addEventListener('click', function () {
+    const target = document.getElementById('aboutContent');
+const start = window.scrollY;
+const end = target.getBoundingClientRect().top + start;
+const duration = 600; // milliseconds — increase for slower, decrease for faster
+let startTime = null;
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function step(timestamp) {
+  if (!startTime) startTime = timestamp;
+  const elapsed = timestamp - startTime;
+  const progress = Math.min(elapsed / duration, 1);
+  window.scrollTo(0, start + (end - start) * easeInOutCubic(progress));
+  if (progress < 1) requestAnimationFrame(step);
+}
+
+requestAnimationFrame(step);
+    });
+
+    // ── Card fly-in via IntersectionObserver ─────────────────────
+    // Stagger delays mirror the existing CSS animation-delay values
+    const DELAYS = ['0.05s', '0.17s', '0.29s', '0.41s'];
+
+    const cards = document.querySelectorAll('.about-text p');
+
+    cards.forEach(function (card, i) {
+      card.style.transitionDelay = DELAYS[i] || '0s';
+    });
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('card-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    cards.forEach(function (card) { observer.observe(card); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agnes Kocsis — Real Estate</title>
+  <link rel="icon" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <noscript><meta http-equiv="refresh" content="0;url=nojs.html"></noscript>
+</head>
+<body>
+
+  <header id="header"></header>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <h1>Agnes Kocsis</h1>
+    <p class="hero-sub">Real Estate · Budapest</p>
+    <p class="hero-tagline">Properties for sale and for rent — with personal attention.</p>
+    <div class="hero-ctas">
+      <a href="for-rent.html" class="btn-primary">
+        <i class="fas fa-key" style="margin-right:6px"></i>For Rent
+      </a>
+      <a href="for-sale.html" class="btn-primary" style="background:var(--badge-gradient)">
+        <i class="fas fa-home" style="margin-right:6px"></i>For Sale
+      </a>
+      <a href="spain.html" class="btn-primary" style="background:linear-gradient(135deg,#c8102e,#f1bf00)">
+        <i class="fas fa-umbrella-beach" style="margin-right:6px"></i>Spain
+      </a>
+    </div>
+  </section>
+
+  <!-- Categories with live counts (data-driven) -->
+  <section class="home-cats">
+    <div class="cat-grid" id="cat-grid"></div>
+  </section>
+
+  <!-- Featured Properties (data-driven) -->
+  <section class="featured-section">
+    <h2 class="reveal">Featured Properties</h2>
+    <div class="featured-grid" id="featured-grid"></div>
+  </section>
+
+  <!-- Contact strip -->
+  <section class="home-cta" id="home-cta"></section>
+
+  <footer></footer>
+
+  <script src="../data/properties.js"></script>
+  <script src="../shared.js"></script>
+  <script>
+    initPage('home');
+    buildCategoryTiles('cat-grid');
+    buildFeatured('featured-grid');
+    buildContactCta('home-cta');
+  </script>
+</body>
+</html>
