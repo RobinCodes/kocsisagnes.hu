@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Nyugalom Szigete | Masszázs | Kocsis Ágnes > Masszőr</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header__container">
+      <h1 class="header__title" onclick="location.reload()">A Nyugalom Szigete</h1>
+      
+      <nav class="nav">
+        <ul class="nav__list">
+          <li><a href="#home" class="nav__link">Főoldal</a></li>
+          <li><a href="#about" class="nav__link">Rólunk</a></li>
+          <li><a href="#services" class="nav__link">Szolgáltatások</a></li>
+          <li><a href="#pricing" class="nav__link">Árlista</a></li>
+          <li><a href="#contact" class="nav__link">Kapcsolat</a></li>
+        </ul>
+      </nav>
+
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="mobile-nav" id="mobileNav">
+      <ul class="mobile-nav__list">
+        <li class="mobile-nav__item">
+          <a href="#home" class="mobile-nav__link" onclick="closeMobileMenu()">Otthon</a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#about" class="mobile-nav__link" onclick="closeMobileMenu()">Rólunk</a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#services" class="mobile-nav__link" onclick="closeMobileMenu()">Szolgáltatások</a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#pricing" class="mobile-nav__link" onclick="closeMobileMenu()">Árlista</a>
+        </li>
+        <li class="mobile-nav__item">
+          <a href="#contact" class="mobile-nav__link" onclick="closeMobileMenu()">Kapcsolat</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero__container">
+        <div class="hero__content">
+          <h2 class="hero__title">Üdvözlet a Nyugalom Szigetén!</h2>
+          <p class="hero__subtitle">Tapasztalja meg a teljes testi-lelki felfrissülést szakértő masszázzsal és terápiával.</p>
+        </div>
+        
+        <div class="hero__about" id="about">
+          <h3 class="about__title">Rólunk</h3>
+          <div class="about__profile">
+            <img src="favicon.png" alt="Kocsis Ágnes" class="about__image">
+            <h4 class="about__name">Kocsis Ágnes</h4>
+            <div class="about__divider"></div>
+            <p class="about__description">
+              Tapasztalt masszőrként Ágnes segít Önnek ellazulni, feltöltődni, és megtalálni a belső harmóniát egy meghitt, nyugodt környezetben.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="services">
+    <div class="container">
+      <h2 class="section__title">Szolgáltatások</h2>
+      
+      <div class="services__grid">
+        <div class="service__card">
+          <div class="service__icon">
+            <i class="fas fa-spa"></i>
+          </div>
+          <h3 class="service__title">Relaxációs masszázs</h3>
+          <p class="service__description">
+            Egy nyugtató, egész testre kiterjedő masszázs, amely segít ellazítani az izmokat és csökkenteni a stresszt.
+          </p>
+        </div>
+
+        <div class="service__card">
+          <div class="service__icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h3 class="service__title">Relaxációs masszázs terápiával</h3>
+          <p class="service__description">
+            Ugyanaz, mint a sima masszázs, de lehetőség van közben egy nyugodt, őszinte beszélgetésre is — ez a lelki feltöltődés részét képezi, extra költség nélkül.
+          </p>
+        </div>
+
+        <div class="service__card">
+          <div class="service__icon">
+            <i class="fas fa-leaf"></i>
+          </div>
+          <h3 class="service__title">Ájurvédikus masszázs</h3>
+          <p class="service__description">
+            Egy ősi indiai technikára épülő masszázs, amely egyensúlyt teremt a test és a lélek között.
+          </p>
+        </div>
+
+        <div class="service__card">
+          <div class="service__icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3 class="service__title">Ájurvédikus masszázs terápiával</h3>
+          <p class="service__description">
+            Az ájurvédikus kezelés kiegészül egy vezetett, intuitív beszélgetéssel, mely segíti az önismereti folyamatokat. Ez is plusz költség nélkül elérhető.
+          </p>
+        </div>
+      </div>
+
+      <p class="services__note">
+        Minden típus választható 30 vagy 60 perces időtartamban.
+      </p>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="pricing">
+    <div class="container">
+      <h2 class="section__title">Árlista</h2>
+      
+      <table class="pricing__table">
+        <thead>
+          <tr>
+            <th>Szolgáltatás</th>
+            <th>30 perc</th>
+            <th>60 perc</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Szolgáltatás">Relaxációs masszázs</td>
+            <td data-label="30 perc">15 000 Ft</td>
+            <td data-label="60 perc">25 000 Ft</td>
+          </tr>
+          <tr>
+            <td data-label="Szolgáltatás">Relaxációs masszázs terápiával</td>
+            <td data-label="30 perc">15 000 Ft (+0 Ft)</td>
+            <td data-label="60 perc">25 000 Ft (+0 Ft)</td>
+          </tr>
+          <tr>
+            <td data-label="Szolgáltatás">Ájurvédikus masszázs</td>
+            <td data-label="30 perc">18 000 Ft</td>
+            <td data-label="60 perc">30 000 Ft</td>
+          </tr>
+          <tr>
+            <td data-label="Szolgáltatás">Ájurvédikus masszázs terápiával</td>
+            <td data-label="30 perc">18 000 Ft (+0 Ft)</td>
+            <td data-label="60 perc">30 000 Ft (+0 Ft)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <h2 class="section__title">Kapcsolat</h2>
+      <p class="contact__intro">
+        Kérjük, töltse ki az alábbi űrlapot időpontfoglaláshoz!
+      </p>
+      
+      <form class="contact__form" id="appointmentForm">
+        <div class="form__group">
+          <label for="name" class="form__label">Név *</label>
+          <input type="text" id="name" name="2name" class="form__input" required>
+        </div>
+
+        <div class="form__group">
+          <label for="email" class="form__label">Email</label>
+          <input type="email" id="email" name="2email" class="form__input">
+        </div>
+
+        <div class="form__group">
+          <label for="phone" class="form__label">Telefonszám *</label>
+          <input type="tel" id="phone" name="2phone" class="form__input" required>
+        </div>
+
+        <div class="form__group">
+          <label for="service" class="form__label">Választott szolgáltatás *</label>
+          <select id="service" name="2service" class="form__select" required>
+            <option value="">Válasszon...</option>
+            <option value="Relaxációs">Relaxációs masszázs</option>
+            <option value="Relaxációs + terápia">Relaxációs masszázs terápiával</option>
+            <option value="Ájurvédikus">Ájurvédikus masszázs</option>
+            <option value="Ájurvédikus + terápia">Ájurvédikus masszázs terápiával</option>
+          </select>
+        </div>
+
+        <div class="form__group">
+          <label for="duration" class="form__label">Időtartam *</label>
+          <select id="duration" name="2duration" class="form__select" required>
+            <option value="">Válasszon...</option>
+            <option value="30 Perc">30 perc</option>
+            <option value="60 Perc">60 perc</option>
+          </select>
+        </div>
+
+        <button type="submit" class="form__button">
+          Időpont foglalása
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>A Nyugalom Szigete | Email: agneskocsis@gmail.com | Tel: +36 20 911 7442</p>
+    </div>
+    <div class="container">
+      <p onclick='location.href="data_management.pdf"' style="cursor:pointer">Adatkezelési tájékoztató</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="scripts.js" defer></script>
+</body>
+</html>
