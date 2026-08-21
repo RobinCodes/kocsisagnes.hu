@@ -10,6 +10,9 @@ const $ = id => document.getElementById(id);
 const q = sel => document.querySelector(sel);
 const qq = sel => document.querySelectorAll(sel);
 
+/* Handle returned by BotDefense.protect() for the contact form, if built. */
+var contactGuard = null;
+
 /* ── Image extension fallback ─────────────────────────────── */
 /**
  * Cycles jpg → jpeg → png → webp -> jfif until one loads.
@@ -41,6 +44,9 @@ function resolveTheme() {
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
+  /* The reCAPTCHA widget bakes its palette in at render time, so it has to be
+     re-rendered rather than restyled. */
+  if (contactGuard) contactGuard.refreshCaptcha();
   const emoji = theme === 'light' ? '☀️' : '🌙';
   const orb = q('.theme-toggle .toggle-orb');
   if (orb) orb.textContent = emoji;
@@ -123,8 +129,8 @@ function buildFooter() {
       <p>${t.realEstate}</p>
     </div>
     <div class="footer-right footer-contact">
-      <p onclick="location.href='mailto:agneskocsis@gmail.com'" style="cursor:pointer">
-        <i class="fas fa-envelope"></i> agneskocsis@gmail.com
+      <p data-bd-email="YWduZXNrb2NzaXNAZ21haWwuY29t" style="cursor:pointer">
+        <i class="fas fa-envelope"></i> <span data-bd-slot></span>
       </p>
       <p onclick="location.href='tel:+36209117442'" style="cursor:pointer">
         <i class="fas fa-phone-alt"></i> +36 20 911 7442
@@ -139,6 +145,7 @@ function initPage(activePage) {
   const footer = q('footer');
   if (header) header.innerHTML = buildHeader(activePage);
   if (footer) footer.innerHTML = buildFooter();
+  window.BotDefense?.revealEmails(document);
 
   /* Move FAB out of header so backdrop-filter can't trap its fixed position */
   const fab = $('theme-fab');
@@ -274,6 +281,11 @@ const translations = {
     spainHeroSub: 'Exclusive residences on the Mediterranean coast — curated for discerning buyers and guided with personal expertise.',
     spainBadge: '🇪🇸 Spain',
     spainComingSoon: 'An exclusive selection is being curated. <a href="contact.html" style="color:inherit;text-decoration:underline">Reach out</a> to be the first to know.',
+    spainDocsTitle: 'Development documents',
+    spainDocsSub: 'Villas de Loix — 27 exclusive villas in Rincón de Loix, Benidorm.',
+    spainDocsDossier: 'Project brochure',
+    spainDocsSpecs: 'Building specifications',
+    spainDocsPdf: 'PDF',
     privacyPolicy: 'Privacy Policy'
   },
   hu: {
@@ -317,6 +329,11 @@ const translations = {
     spainHeroSub: 'Exkluzív rezidenciák a Földközi-tenger partján — igényes vevők számára válogatva, személyes szakértelemmel.',
     spainBadge: '🇪🇸 Spanyolország',
     spainComingSoon: 'Exkluzív kínálatunkat éppen összeállítjuk. <a href="contact.html" style="color:inherit;text-decoration:underline">Lépjen kapcsolatba</a>, hogy elsőként értesüljön.',
+    spainDocsTitle: 'A projekt dokumentumai',
+    spainDocsSub: 'Villas de Loix — 27 exkluzív villa Benidormban, a Rincón de Loix negyedben.',
+    spainDocsDossier: 'Projekt prospektus',
+    spainDocsSpecs: 'Műszaki tartalom',
+    spainDocsPdf: 'PDF',
     privacyPolicy: 'Adatkezelési Tájékoztató'
   }
 };
@@ -348,21 +365,53 @@ function buildContactForm(containerId) {
 
   const form   = $('contact-form');
   const status = $('form-status');
+
+  /* Honeypot, timing trap, rate limit, spam scoring and reCAPTCHA v2. If the
+     script is missing the form submits unprotected — losing enquiries is worse
+     than losing a layer, and the warning says which it is. */
+  if (!window.BotDefense) console.warn('bot-defense.js did not load — contact form is unprotected');
+  contactGuard = window.BotDefense?.protect(form, {
+    id: 'kocsis-contact',
+    lang: getLang(),
+    fields: { name: 'name', email: 'email', message: 'message' },
+    captchaAnchor: 'button[type="submit"]',
+    captchaTheme: () => document.documentElement.dataset.theme
+  }) || null;
+  const guard = contactGuard;
+
+  const showOk = () => {
+    status.textContent = t.formOk;
+    status.style.color = 'var(--accent-bright)';
+    form.reset();
+  };
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+
+    const verdict = guard ? guard.check() : { ok: true };
+    if (!verdict.ok) {
+      /* Definitive bot tells get the success message and no e-mail, so whoever
+         is sending has nothing to tune against. */
+      if (verdict.silent) { showOk(); guard.reset(); return; }
+      status.textContent = verdict.message;
+      status.style.color = '#ef4444';
+      return;
+    }
+
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
     btn.textContent = t.formSending;
+    status.textContent = '';
     emailjs.sendForm('service_49g5oye', 'template_79mp0xu', form)
       .then(() => {
-        status.textContent = t.formOk;
-        status.style.color = 'var(--accent-bright)';
-        form.reset();
+        showOk();
+        guard?.done();
       })
       .catch(err => {
         console.error(err);
         status.textContent = t.formErr;
         status.style.color = '#ef4444';
+        guard?.reset();
       })
       .finally(() => {
         btn.disabled = false;
@@ -391,6 +440,31 @@ function buildSpainHero(containerId) {
     </div>
     <div class="spain-tile-border spain-tile-border--bottom"></div>
   `;
+}
+
+/* ── Spain Developer Documents ─────────────────────────────── */
+function buildSpainDocs(containerId) {
+  const t = translations[getLang()];
+  const wrap = $(containerId);
+  if (!wrap) return;
+  const base = '../assets/properties/spain/';
+  const doc = (file, label) => `
+    <a class="spain-doc" href="${base}${file}" target="_blank" rel="noopener">
+      <i class="fas fa-file-pdf" aria-hidden="true"></i>
+      <span class="spain-doc-label">${label}</span>
+      <span class="spain-doc-ext">${t.spainDocsPdf}</span>
+    </a>`;
+  wrap.innerHTML = `
+    <div class="spain-docs reveal">
+      <h3>${t.spainDocsTitle}</h3>
+      <p class="spain-docs-sub">${t.spainDocsSub}</p>
+      <div class="spain-docs-row">
+        ${doc('villas-de-loix-dossier.pdf', t.spainDocsDossier)}
+        ${doc('villas-de-loix-building-specifications.pdf', t.spainDocsSpecs)}
+      </div>
+    </div>
+  `;
+  initReveal();
 }
 
 /* ── Spain Coming-Soon Builder ─────────────────────────────── */
@@ -548,9 +622,10 @@ function buildContactCta(containerId) {
       <div class="cta-actions">
         <a class="btn-primary" href="contact.html"><i class="fas fa-paper-plane" style="margin-right:6px"></i>${t.contact}</a>
         <a class="btn-ghost" href="tel:+36209117442"><i class="fas fa-phone-alt" style="margin-right:6px"></i>+36 20 911 7442</a>
-        <a class="btn-ghost" href="mailto:agneskocsis@gmail.com"><i class="fas fa-envelope" style="margin-right:6px"></i>agneskocsis@gmail.com</a>
+        <a class="btn-ghost" data-bd-email="YWduZXNrb2NzaXNAZ21haWwuY29t" href="#"><i class="fas fa-envelope" style="margin-right:6px"></i><span data-bd-slot></span></a>
       </div>
     </div>`;
+  window.BotDefense?.revealEmails(wrap);
   initReveal();
 }
 

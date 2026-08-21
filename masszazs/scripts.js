@@ -3,8 +3,13 @@ const serviceID = 'service_khrpnrm';
 const templateID = 'template_kjxepli';
 
 emailjs.init({
-    publicKey: '5VRVlPsLVUbn81VK9'
+    publicKey: '5VRVlPsLVUbn81VK9',
+    blockHeadless: true,                            // refuse Puppeteer/Playwright/Selenium
+    limitRate: { id: 'masszazs-appointment', throttle: 60000 }
 });
+
+// Handle returned by BotDefense.protect() for the appointment form.
+let appointmentGuard = null;
 
 // Mobile Menu Functions
 function toggleMobileMenu() {
@@ -37,7 +42,20 @@ const observer = new IntersectionObserver((entries) => {
 // Form Submission Handler
 function handleFormSubmission() {
     const form = document.getElementById('appointmentForm');
-    
+    const OK_MESSAGE = "Kérését megkaptuk, és mihamarabb válaszolunk!";
+
+    // Honeypot, timing trap, rate limit, spam scoring and reCAPTCHA v2. If the
+    // script is missing the form submits unprotected — losing bookings is worse
+    // than losing a layer, and the warning says which it is.
+    if (!window.BotDefense) console.warn('bot-defense.js did not load — appointment form is unprotected');
+    appointmentGuard = window.BotDefense?.protect(form, {
+    id: 'masszazs-appointment',
+    lang: 'hu',
+    fields: { name: '2name', email: '2email', phone: '2phone' },
+    captchaAnchor: '.form__button',
+    captchaTheme: 'light'
+    }) || null;
+
     form.addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -48,6 +66,20 @@ function handleFormSubmission() {
         alert("Kérjük, adjon meg legalább egy elérhetőséget: email vagy telefonszám.");
         return;
     }
+
+    const verdict = appointmentGuard ? appointmentGuard.check() : { ok: true };
+    if (!verdict.ok) {
+        // A definitive bot tell gets the same confirmation a human gets and no
+        // e-mail, so whoever is sending has nothing to tune against.
+        if (verdict.silent) {
+        alert(OK_MESSAGE);
+        form.reset();
+        appointmentGuard.reset();
+        } else {
+        alert(verdict.message);
+        }
+        return;
+    }
     
     const submitButton = form.querySelector('.form__button');
     const originalText = submitButton.textContent;
@@ -56,12 +88,14 @@ function handleFormSubmission() {
     
     emailjs.sendForm(serviceID, templateID, form)
         .then(() => {
-        alert("Kérését megkaptuk, és mihamarabb válaszolunk!");
+        alert(OK_MESSAGE);
         form.reset();
+        appointmentGuard?.done();
         })
         .catch((error) => {
         alert("Hiba történt az elküldés során. Kérem, próbálja újra.");
         console.error('EmailJS error:', error);
+        appointmentGuard?.reset();
         })
         .finally(() => {
         submitButton.textContent = originalText;

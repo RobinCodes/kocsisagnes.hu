@@ -1,0 +1,10 @@
+# https://kocsisagnes.hu/
+User-agent: *
+Allow: /
+
+# The nojs.html pages are the scripting-disabled fallback and duplicate the real
+# pages' contact details. They carry <meta name="robots" content="noindex">, so
+# they are deliberately NOT disallowed here — a crawler has to fetch a page to
+# see its noindex.
+
+Sitemap: https://kocsisagnes.hu/sitemap.xml

@@ -5,9 +5,9 @@ Estate Manager — internal admin tool for kocsisagnes.hu
 ========================================================
 
 Add, edit, reorder and remove property listings without touching any
-HTML. The tool edits  v1/data/properties.js  (the single source of truth
+HTML. The tool edits  data/properties.js  (the single source of truth
 the website reads) and copies photos into
-v1/assets/properties/<category>/property-N/.
+assets/properties/<category>/property-N/.
 
 How to run
 ----------
@@ -27,8 +27,10 @@ import webbrowser
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
-V1 = BASE / "v1"
-DATA_FILE = V1 / "data" / "properties.js"
+# The site used to sit in a v1/ sub-folder; it is now the repo root itself,
+# alongside this script.
+SITE = BASE
+DATA_FILE = SITE / "data" / "properties.js"
 
 HEADER = (
     "/* ============================================================\n"
@@ -82,7 +84,7 @@ def next_folder(data, cat):
     """First free assets/properties/<sub>/property-N folder (checks disk
     and every folder referenced anywhere in the data)."""
     sub = CATEGORIES[cat][1]
-    parent = V1 / "assets" / "properties" / sub
+    parent = SITE / "assets" / "properties" / sub
     used = set()
     if parent.is_dir():
         for d in parent.iterdir():
@@ -149,11 +151,10 @@ def selftest():
             for lang in ("hu", "en"):
                 for key in ("title", "loc", "price", "type", "desc"):
                     assert key in p[lang], (cat, p["id"], lang, key)
-            if cat != "spain":
-                folder = V1 / Path(*p["folder"].split("/"))
-                assert folder.is_dir(), folder
-                for img in p["images"]:
-                    assert (folder / img).is_file(), folder / img
+            folder = SITE / Path(*p["folder"].split("/"))
+            assert folder.is_dir(), folder
+            for img in p["images"]:
+                assert (folder / img).is_file(), folder / img
 
     assert next_id(cats["for-sale"]) == max(p["id"] for p in cats["for-sale"]) + 1
     assert next_image_name([], "a/b.JPG") == "main.jpg"
@@ -482,7 +483,7 @@ def main():
         # folder + photos
         if not p["folder"]:
             p["folder"] = next_folder(data, state["cat"])
-        folder_abs = V1 / Path(*p["folder"].split("/"))
+        folder_abs = SITE / Path(*p["folder"].split("/"))
         staged = [e for e in state["images"] if e["kind"] == "staged"]
         if staged:
             folder_abs.mkdir(parents=True, exist_ok=True)
@@ -520,7 +521,7 @@ def main():
         props().remove(p)
         save_data(data)
         if p["folder"]:
-            folder_abs = V1 / Path(*p["folder"].split("/"))
+            folder_abs = SITE / Path(*p["folder"].split("/"))
             if folder_abs.is_dir() and messagebox.askyesno(
                     "Delete photos too?",
                     f"Also delete the photo folder?\n{folder_abs}"):
@@ -535,7 +536,7 @@ def main():
         status.set("Listing deleted.")
 
     def open_site():
-        webbrowser.open((V1 / "hu" / "index.html").as_uri())
+        webbrowser.open((SITE / "hu" / "index.html").as_uri())
 
     ttk.Button(toolbar, text="➕ New property", command=new_property).pack(side="left")
     ttk.Button(toolbar, text="💾 Save", command=save_property).pack(side="left", padx=(6, 0))

@@ -1561,6 +1561,63 @@ body.hero-page .about-hero-title {
 }
 .spain-empty-msg a { color: var(--accent-bright); text-underline-offset: 3px; }
 
+/* ── Spain: downloadable developer documents ─────────────── */
+.spain-docs {
+  text-align: center;
+  padding: 3.5rem 1.5rem 4.5rem;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+.spain-docs h3 {
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.6rem;
+}
+.spain-docs-sub {
+  color: var(--text-muted);
+  font-weight: 300;
+  font-size: 0.95rem;
+  max-width: 460px;
+  margin: 0 auto 1.8rem;
+  line-height: 1.7;
+}
+.spain-docs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  justify-content: center;
+}
+.spain-doc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.spain-doc:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+.spain-doc i { color: #e0483b; font-size: 1.15rem; }
+.spain-doc-ext {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+@media (max-width: 480px) {
+  .spain-doc { width: 100%; justify-content: center; }
+}
+
 /* ══════════════════════════════════════════════════════════
    FILTER BAR
 ══════════════════════════════════════════════════════════ */

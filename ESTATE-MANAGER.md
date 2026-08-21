@@ -14,10 +14,10 @@ python estate_manager.pyw
 
 ## How it works
 
-- All listings live in **`v1/data/properties.js`** — the only file the
+- All listings live in **`data/properties.js`** — the only file the
   website reads for property data. Every page (HU + EN) renders from it.
 - The app edits that file and copies photos into
-  `v1/assets/properties/<category>/property-N/`.
+  `assets/properties/<category>/property-N/`.
 - After pressing **Save**, the website is already up to date — just
   commit + push as usual.
 

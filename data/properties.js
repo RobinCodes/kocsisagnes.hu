@@ -334,6 +334,93 @@ window.ESTATE_DATA = {
         }
       }
     ],
-    "spain": []
+    "spain": [
+      {
+        "id": 1,
+        "featured": 1,
+        "room": 4,
+        "area": "",
+        "folder": "assets/properties/spain/property-1",
+        "images": [
+          "main.webp",
+          "1.webp",
+          "2.webp",
+          "3.webp",
+          "4.webp",
+          "5.webp",
+          "6.webp",
+          "7.webp",
+          "8.webp",
+          "9.webp",
+          "10.webp",
+          "11.webp",
+          "12.webp",
+          "13.webp",
+          "14.webp",
+          "15.webp",
+          "16.webp",
+          "17.webp",
+          "18.webp",
+          "19.webp",
+          "20.webp",
+          "21.webp",
+          "22.webp",
+          "23.webp",
+          "24.webp",
+          "25.webp",
+          "26.webp",
+          "27.webp",
+          "28.webp",
+          "29.webp",
+          "30.webp",
+          "31.webp",
+          "32.webp",
+          "33.webp",
+          "34.webp",
+          "35.webp"
+        ],
+        "hu": {
+          "title": "Luxusvilla Benidormban — Villas de Loix (26-os villa)",
+          "loc": "Rincón de Loix, Benidorm",
+          "price": "Ár: kérésre",
+          "type": "Eladó",
+          "desc": "\nELADÓ LUXUSVILLA — Villas de Loix, Benidorm\n\nKulcsrakész, berendezett villa a Villas de Loix rezidenciában. Négy hálószoba (az egyik dolgozószobaként berendezve), több fürdőszoba, egy légterű nappali-konyha szigettel, valamint nagy üvegfelületek, amelyeken át egész nap természetes fény érkezik.\n\nA kertben magánmedence, napozóterasz és fedett BBQ-sarok található. Az alsó szinten hall, belső lépcső és kétállásos garázs kapott helyet. A teraszokról hegyre és a tengerpartra nyíló kilátás.\n\nMűszaki tartalom:\n• Padlófűtés és hűtő-fűtő légkondicionálás\n• Grenton okosotthon-rendszer, motoros árnyékolókkal\n• 6 db Ledvance napelem (2,76 kWp), kb. 4 019 kWh éves termeléssel\n• Elektromos autótöltő előkészítése\n• Hőhídmegszakításos alumínium nyílászárók, argonnal töltött biztonsági üvegezéssel\n• Természetes kő és prémium kerámia burkolatok, süllyesztett LED-világítás\n• Automata telek- és garázskapu, videós kaputelefon\n\nA környékről:\nA Villas de Loix a hegy védelmében, Benidorm egyik legkeresettebb részén, a Rincón de Loix negyedben fekszik. A Földközi-tenger mintegy 10 perc sétára, a mindennapi szolgáltatások 200 méteren belül elérhetők. A közelben található a Villaitana és a Las Rejas golfpálya, a Sierra Helada Természetvédelmi Park, a benidormi kikötő, a La Marina bevásárlóközpont és az IMED Levante kórház; Alicante és a Costa Blanca autópályán gyorsan elérhető.\n\nA projekt összesen 27 exkluzív, 3 vagy 4 hálószobás luxusvillából áll, mindegyik saját medencével, kerttel és gondosan kialakított külső terekkel.\n\n+36 20 911 7442"
+        },
+        "en": {
+          "title": "Luxury Villa in Benidorm — Villas de Loix (Villa 26)",
+          "loc": "Rincón de Loix, Benidorm",
+          "price": "Price on request",
+          "type": "For sale",
+          "desc": "\nLUXURY VILLA FOR SALE — Villas de Loix, Benidorm\n\nA completed, fully furnished villa in the Villas de Loix development. Four bedrooms (one fitted out as a study), several bathrooms, and an open-plan living and kitchen space with a central island, wrapped in large windows that keep the interior bright all day.\n\nThe garden holds a private pool, a sun terrace and a covered barbecue area. The lower floor has a hall, internal staircase and a garage for two cars. The terraces look out to the mountains and the coast.\n\nBuilding specification:\n• Underfloor heating and hot/cold air conditioning\n• Grenton smart-home system with motorised blinds\n• Six Ledvance solar panels (2.76 kWp), around 4,019 kWh generated per year\n• Pre-installation for an electric car charger\n• Thermally broken aluminium windows with argon-filled security glazing\n• Natural stone and high-end ceramic finishes, recessed LED lighting\n• Automated plot gate and garage door, video intercom\n\nThe area:\nVillas de Loix sits in the shelter of the mountain in Rincón de Loix, one of Benidorm's most sought-after districts. The Mediterranean is about a ten-minute walk away and everyday amenities are within 200 metres. Villaitana and Las Rejas golf courses, the Sierra Helada Nature Park, Benidorm marina, La Marina shopping centre and IMED Levante hospital are all close by, with fast road connections to Alicante and the wider Costa Blanca.\n\nThe development comprises 27 exclusive luxury villas of three or four bedrooms, each with its own pool, garden and carefully designed outdoor space.\n\n+36 20 911 7442"
+        }
+      },
+      {
+        "id": 2,
+        "featured": 0,
+        "room": null,
+        "area": "",
+        "folder": "assets/properties/spain/property-2",
+        "images": [
+          "main.webp",
+          "1.webp",
+          "2.webp",
+          "3.webp"
+        ],
+        "hu": {
+          "title": "Épülő villa Benidormban — Villas de Loix (25-ös villa)",
+          "loc": "Rincón de Loix, Benidorm",
+          "price": "Ár: kérésre",
+          "type": "Eladó",
+          "desc": "\nELADÓ VILLA — Villas de Loix, Benidorm\n\nÉpülő luxusvilla a Villas de Loix rezidenciában, magánmedencével, kerttel és tágas teraszokkal. A villa a hegyoldal adottságait kihasználva épül, így a lakóterek világosak, és a szomszédos telkektől védett, intim kialakítást kapnak.\n\nMegjegyzés: az első két kép látványterv, a harmadik a helyszínen készült fotó. A végleges kialakítás és a berendezés ettől eltérhet.\n\nMűszaki tartalom:\n• Padlófűtés és hűtő-fűtő légkondicionálás\n• Grenton okosotthon-rendszer, motoros árnyékolókkal\n• 6 db Ledvance napelem (2,76 kWp), kb. 4 019 kWh éves termeléssel\n• Elektromos autótöltő előkészítése\n• Hőhídmegszakításos alumínium nyílászárók, argonnal töltött biztonsági üvegezéssel\n• Természetes kő és prémium kerámia burkolatok, süllyesztett LED-világítás\n• Automata telek- és garázskapu, videós kaputelefon\n\nA környékről:\nA Villas de Loix a hegy védelmében, Benidorm egyik legkeresettebb részén, a Rincón de Loix negyedben fekszik. A Földközi-tenger mintegy 10 perc sétára, a mindennapi szolgáltatások 200 méteren belül elérhetők. A közelben található a Villaitana és a Las Rejas golfpálya, a Sierra Helada Természetvédelmi Park, a benidormi kikötő, a La Marina bevásárlóközpont és az IMED Levante kórház; Alicante és a Costa Blanca autópályán gyorsan elérhető.\n\nA projekt összesen 27 exkluzív, 3 vagy 4 hálószobás luxusvillából áll, mindegyik saját medencével, kerttel és gondosan kialakított külső terekkel.\n\n+36 20 911 7442"
+        },
+        "en": {
+          "title": "Villa Under Construction in Benidorm — Villas de Loix (Villa 25)",
+          "loc": "Rincón de Loix, Benidorm",
+          "price": "Price on request",
+          "type": "For sale",
+          "desc": "\nVILLA FOR SALE — Villas de Loix, Benidorm\n\nA luxury villa under construction at Villas de Loix, with a private pool, garden and generous terraces. The design works with the slope of the plot, so the living spaces stay bright while remaining screened from the neighbouring villas.\n\nPlease note: the first two images are computer-generated renders; the third is a photograph taken on site. The finished property and its furnishings may differ.\n\nBuilding specification:\n• Underfloor heating and hot/cold air conditioning\n• Grenton smart-home system with motorised blinds\n• Six Ledvance solar panels (2.76 kWp), around 4,019 kWh generated per year\n• Pre-installation for an electric car charger\n• Thermally broken aluminium windows with argon-filled security glazing\n• Natural stone and high-end ceramic finishes, recessed LED lighting\n• Automated plot gate and garage door, video intercom\n\nThe area:\nVillas de Loix sits in the shelter of the mountain in Rincón de Loix, one of Benidorm's most sought-after districts. The Mediterranean is about a ten-minute walk away and everyday amenities are within 200 metres. Villaitana and Las Rejas golf courses, the Sierra Helada Nature Park, Benidorm marina, La Marina shopping centre and IMED Levante hospital are all close by, with fast road connections to Alicante and the wider Costa Blanca.\n\nThe development comprises 27 exclusive luxury villas of three or four bedrooms, each with its own pool, garden and carefully designed outdoor space.\n\n+36 20 911 7442"
+        }
+      }
+    ]
   }
 };
