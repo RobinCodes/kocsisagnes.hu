@@ -1,0 +1,99 @@
+name: Deploy to cPanel
+
+# cPanel's Git Version Control never pulls on its own — "Update from Remote"
+# and "Deploy HEAD Commit" are manual buttons. Both are exposed over UAPI,
+# so this workflow presses them for us on every push to main.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never let two deployments overwrite public_html at the same time.
+concurrency:
+  group: cpanel-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull latest commit into the cPanel clone, then deploy it
+        env:
+          CPANEL_URL: ${{ secrets.CPANEL_URL }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+          REPO_ROOT: ${{ secrets.CPANEL_REPO_ROOT }}
+          BRANCH: main
+        run: |
+          set -euo pipefail
+
+          for v in CPANEL_URL CPANEL_USER CPANEL_TOKEN REPO_ROOT; do
+            if [ -z "${!v}" ]; then
+              echo "::error::Missing repository secret: $v"
+              exit 1
+            fi
+          done
+
+          BASE="${CPANEL_URL%/}"
+          AUTH="Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}"
+
+          # Calls a UAPI endpoint and fails the step on a non-success status.
+          # Prints only the JSON body, so callers can pipe it into jq.
+          uapi() {
+            endpoint="$1"; shift
+            body=$(curl -sS --fail-with-body --get \
+                     --max-time 120 \
+                     -H "$AUTH" \
+                     "$@" \
+                     "${BASE}/execute/${endpoint}") || {
+              echo "::error::HTTP request to ${endpoint} failed" >&2
+              echo "$body" >&2
+              return 1
+            }
+            if [ "$(printf '%s' "$body" | jq -r '.status // 0')" != "1" ]; then
+              echo "::error::UAPI ${endpoint} returned an error" >&2
+              printf '%s' "$body" | jq -r '.errors[]? // "unknown error"' >&2
+              return 1
+            fi
+            printf '%s' "$body"
+          }
+
+          echo "==> Updating cPanel clone from GitHub (${BRANCH})"
+          uapi "VersionControl/update" \
+            --data-urlencode "repository_root=${REPO_ROOT}" \
+            --data-urlencode "branch=${BRANCH}" \
+            | jq -r '"    HEAD is now \(.data.last_update.commit_sha_short // .data.branch // "updated")"'
+
+          echo "==> Queueing deployment (.cpanel.yml)"
+          create=$(uapi "VersionControlDeployment/create" \
+            --data-urlencode "repository_root=${REPO_ROOT}")
+          deploy_id=$(printf '%s' "$create" | jq -r '.data.deploy_id // empty')
+          log_path=$(printf '%s' "$create" | jq -r '.data.log_path // empty')
+          echo "    deploy_id=${deploy_id:-unknown}  log=${log_path:-unknown}"
+
+          if [ -z "$deploy_id" ]; then
+            echo "::warning::cPanel accepted the deployment but returned no deploy_id; cannot track completion."
+            exit 0
+          fi
+
+          echo "==> Waiting for deployment to finish"
+          for attempt in $(seq 1 40); do
+            sleep 15
+            entry=$(uapi "VersionControlDeployment/retrieve" \
+                      --data-urlencode "repository_root=${REPO_ROOT}" \
+                    | jq -c --arg id "$deploy_id" \
+                        '(.data // []) | map(select((.deploy_id|tostring) == $id)) | first // {}')
+
+            if [ "$(printf '%s' "$entry" | jq -r '.timestamps.succeeded // empty')" != "" ]; then
+              echo "    Deployment succeeded."
+              exit 0
+            fi
+            if [ "$(printf '%s' "$entry" | jq -r '.timestamps.failed // empty')" != "" ]; then
+              echo "::error::Deployment failed. Check the log on the server: ${log_path:-see cPanel > Git Version Control}"
+              printf '%s' "$entry" | jq . >&2
+              exit 1
+            fi
+            echo "    still running (${attempt}/40)..."
+          done
+
+          echo "::warning::Deployment did not report completion within 10 minutes. It may still be running — check cPanel > Git Version Control, or ${log_path:-the deploy log}."

@@ -1,0 +1,20 @@
+---
+# cPanel deployment tasks. Run by "Deploy HEAD Commit" in cPanel's Git
+# Version Control (and by the GitHub Action in .github/workflows/deploy.yml)
+# after the cPanel-managed clone has been updated from GitHub.
+#
+# Tasks run as your cPanel user, in the repository root, through a shell.
+# A task that exits non-zero aborts the deployment.
+#
+# NOTE: change DEPLOYPATH below if kocsisagnes.hu is an addon/subdomain
+# rather than the account's primary domain — e.g. $HOME/kocsisagnes.hu/
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html
+    - /bin/mkdir -p $DEPLOYPATH
+    # Site directories. rsync only transfers what changed (assets/ is ~126MB,
+    # so a full copy on every push would be slow); cp is the fallback if the
+    # host has no rsync.
+    - rsync -a --omit-dir-times assets data en hu masszazs $DEPLOYPATH/ || /bin/cp -R assets data en hu masszazs $DEPLOYPATH/
+    # Top-level site files.
+    - /bin/cp -f index.html robots.txt sitemap.xml styles.css shared.js bot-defense.js privacy_policy_2026.pdf $DEPLOYPATH/
