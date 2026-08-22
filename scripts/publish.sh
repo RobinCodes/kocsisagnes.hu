@@ -19,7 +19,7 @@ mkdir -p "$DEPLOYPATH"
 
 # rsync only transfers what changed (assets/ is ~126MB, so a full copy on
 # every push would be slow); cp is the fallback if the host has no rsync.
-rsync -a --omit-dir-times assets data en hu masszazs "$DEPLOYPATH/" \
+rsync -a --delete --omit-dir-times assets data en hu masszazs "$DEPLOYPATH/" \
   || cp -R assets data en hu masszazs "$DEPLOYPATH/"
 
 cp -f index.html robots.txt sitemap.xml styles.css shared.js bot-defense.js \
