@@ -1,88 +1,82 @@
 # Automatic deployment: GitHub → cPanel
 
-Pushing to `main` publishes the site. No manual step in cPanel.
+Pushing to `main` publishes the site, within about a minute.
 
 ## How it works
 
-cPanel's Git Version Control does **not** pull on its own — "Update from Remote"
-and "Deploy HEAD Commit" are buttons someone has to click. Both are exposed over
-cPanel's UAPI, so `.github/workflows/deploy.yml` presses them for us:
+A cron job on the cPanel host polls GitHub once a minute. When `origin/main`
+moves, it resets the clone and runs `scripts/publish.sh`, which copies the site
+into `public_html`.
 
 ```
-git push  →  GitHub Actions  →  VersionControl/update            (cPanel clone pulls from GitHub)
-                             →  VersionControlDeployment/create  (cPanel runs .cpanel.yml)
-                             →  copies site files into public_html
+git push  →  GitHub                                    (nothing else to click)
+             cron on the host, every minute
+               → git fetch + reset --hard origin/main
+               → scripts/publish.sh   → copies the site into public_html
 ```
 
-Two files drive it:
+This needs **no API token, no SSH, and no cPanel Git Version Control
+registration** — just a clone and a crontab line.
 
 | File | Role |
 |---|---|
-| `.github/workflows/deploy.yml` | Triggers on push to `main`, calls the cPanel API, waits for the result |
-| `.cpanel.yml` | Runs on the server: copies the site into the docroot |
+| `scripts/publish.sh` | Defines what gets published. The single source of truth. |
+| `scripts/cpanel-cron-deploy.sh` | Runs from cron: polls, resets, calls `publish.sh` |
+| `.cpanel.yml` | Calls `publish.sh`, so cPanel's *Deploy HEAD Commit* button still works |
+| `.github/workflows/deploy.yml` | Optional instant-deploy path; skips itself unless `CPANEL_TOKEN` is set |
+
+Both deploy paths call the same `publish.sh`, so they cannot drift apart.
 
 ## One-time setup
 
-### 1. Clone the repo inside cPanel
+Open cPanel → **Terminal** and paste:
 
-cPanel → **Git Version Control** → *Create* → enable **Clone a Repository**:
+```sh
+git clone https://github.com/RobinCodes/kocsisagnes.hu.git ~/repositories/kocsisagnes.hu
 
-- **Clone URL:** `https://github.com/RobinCodes/kocsisagnes.hu.git`
-  (the repo is public, so no deploy key or credentials are needed)
-- **Repository Path:** `/home/USERNAME/repositories/kocsisagnes.hu`
-- **Branch:** `main`
+(crontab -l 2>/dev/null; \
+ echo '* * * * * /bin/bash $HOME/repositories/kocsisagnes.hu/scripts/cpanel-cron-deploy.sh') \
+ | crontab -
+```
 
-Do **not** clone into `public_html`. The clone is a staging area; `.cpanel.yml`
-copies the published files out of it into the docroot. This is what keeps
-`estate_manager.pyw`, `__pycache__/`, `.claude/` and `.git/` off the public web.
+This account's server (`jadis.23net.hu`) also has SSH open on port 22, so the
+same two commands work over a normal SSH session if Terminal is unavailable.
 
-### 2. Create a cPanel API token
+Watch the first run with:
 
-cPanel → **Manage API Tokens** → *Create* → name it e.g. `github-deploy`.
-Copy the token now; cPanel shows it only once.
+```sh
+tail -f ~/logs/kocsisagnes-deploy.log
+```
 
-### 3. Add four GitHub secrets
+The first deploy is the slow one — `assets/` is ~126 MB. Later deploys use
+rsync and only transfer what changed.
 
-GitHub repo → **Settings** → **Secrets and variables** → **Actions** → *New repository secret*:
+## Optional: instant deploys
 
-| Secret | Value | Example |
-|---|---|---|
-| `CPANEL_URL` | cPanel base URL **including port** | `https://server42.yourhost.com:2083` |
-| `CPANEL_USER` | cPanel username | `kocsisag` |
-| `CPANEL_TOKEN` | the token from step 2 | |
-| `CPANEL_REPO_ROOT` | the path from step 1 | `/home/kocsisag/repositories/kocsisagnes.hu` |
+If cPanel ever exposes **Manage API Tokens** (under *Security*), create one and
+add four repository secrets — `CPANEL_URL` (`https://jadis.23net.hu:2083`),
+`CPANEL_USER` (`kocsshu1`), `CPANEL_TOKEN`, `CPANEL_REPO_ROOT`
+(`/home/kocsshu1/repositories/kocsisagnes.hu`). All but the token are already set.
 
-Secrets are safe in a public repo: they are not exposed to forked pull requests,
-and this workflow only runs on pushes to `main`.
-
-### 4. Check the deploy path
-
-`.cpanel.yml` deploys to `$HOME/public_html`. If kocsisagnes.hu is an **addon
-domain or subdomain** rather than the account's primary domain, change
-`DEPLOYPATH` to that domain's docroot (e.g. `$HOME/kocsisagnes.hu`).
-
-### 5. Try it
-
-Push to `main`, or run it by hand: GitHub → **Actions** → *Deploy to cPanel* →
-**Run workflow**. The run log shows the pulled commit, the deploy id, and
-success or failure.
+The workflow then deploys on push instead of waiting for cron, using cPanel's
+UAPI over port 2083. Remove the cron entry if you switch, so the two do not
+both publish.
 
 ## Notes and gotchas
 
-- **`CPANEL_URL` must be reachable from GitHub's runners on port 2083.** Use the
-  hosting server's own hostname. If `kocsisagnes.hu` is proxied through
-  Cloudflare, the domain name will not work for this — the server hostname will.
-- **Deleting a file from the repo does not delete it from the server.** The
-  deploy copies over the docroot without `--delete`, deliberately: a blind
-  `--delete` on `public_html` would also wipe `cgi-bin`, `.htaccess` and the
-  `.well-known/acme-challenge` directory that SSL renewal uses. Remove retired
-  files by hand in File Manager.
-- **New top-level files are not published automatically.** `.cpanel.yml` lists
-  what to publish explicitly. If you add, say, `contact.html` at the repo root,
-  add it to the `cp` line — otherwise it stays out of the docroot.
-- **The first deploy is the slow one** (`assets/` is ~126 MB). Later deploys use
-  rsync and only transfer what changed.
-- If the Action fails at *Updating cPanel clone*, the usual cause is that the
-  cPanel clone has local commits and can no longer fast-forward — cPanel updates
-  with `--ff-only`. Fix it in cPanel → Git Version Control, or delete and
-  re-clone the repository.
+- **New top-level files are not published automatically.** `publish.sh` lists
+  what to publish explicitly, because this repo root mixes site files with dev
+  tooling — `estate_manager.pyw`, `__pycache__/`, the `.md` docs and `.claude/`
+  must never reach the public web. If you add, say, `contact.html` at the repo
+  root, add it to the `cp -f` line or it stays out of the docroot.
+- **Deleting a file from the repo does not delete it from the server.** The copy
+  runs without `--delete`, deliberately: a blind delete on `public_html` would
+  also wipe `cgi-bin` and the `.well-known/acme-challenge` directory that SSL
+  renewal uses. Remove retired files by hand in File Manager.
+- **The clone must not live in `public_html`.** It holds `.git/`, which would be
+  readable over the web. `~/repositories/` keeps it out of the docroot.
+- **`deployed-commit.txt` in the docroot** records what is currently published.
+  The cron job compares against it, which is what lets a wiped `public_html` or
+  a half-finished publish self-heal on the next tick.
+- `publish.sh` falls back to `cp` if the host has no `rsync`; the fallback is
+  tested and logs a `rsync: command not found` line when it triggers.

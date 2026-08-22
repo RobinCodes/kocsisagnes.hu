@@ -27,7 +27,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          for v in CPANEL_URL CPANEL_USER CPANEL_TOKEN REPO_ROOT; do
+          # Without a cPanel API token this site is published by the cron job
+          # on the host (scripts/cpanel-cron-deploy.sh), which needs neither a
+          # token nor cPanel's Git panel. Skip quietly rather than painting
+          # every push red; adding CPANEL_TOKEN later switches this on with no
+          # other change.
+          if [ -z "$CPANEL_TOKEN" ]; then
+            echo "::notice::CPANEL_TOKEN not set - cPanel API deploy skipped; the host cron job publishes this site."
+            exit 0
+          fi
+
+          for v in CPANEL_URL CPANEL_USER REPO_ROOT; do
             if [ -z "${!v}" ]; then
               echo "::error::Missing repository secret: $v"
               exit 1
